@@ -1,4 +1,4 @@
-#Movement detection and persons counter for Raspberry PI
+# Movement detection and persons counter for Raspberry PI
 
 This Python program works with Python 3.
 It includes pretrained model.
