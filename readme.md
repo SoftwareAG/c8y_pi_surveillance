@@ -32,7 +32,7 @@ You will need to install the following packages (sudo apt-get install):
 - libqtgui4
 - libqt4-test
 
-Then install these Python libraries (sudo pip3 install):
-pip3 install --upgrade imutils
-pip3 install numpy
-pip3 install pybind11
+Then install these Python libraries (pip3 install):
+- imutils
+- numpy
+- pybind11
