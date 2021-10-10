@@ -19,3 +19,20 @@ Content should look like that:
 	"c8y_password": "<yourpassword>"
 }
 ```
+You will need to install the following packages (sudo apt-get install):
+- python3
+- libopencv-dev
+- python3-opencv
+- pyhton3-scipy
+- libhdf5-dev
+- libhdf5-serial-dev
+- libcblas-dev
+- libatlas-base-dev
+- libjasper-dev
+- libqtgui4
+- libqt4-test
+
+Then install these Python libraries (sudo pip3 install):
+pip3 install --upgrade imutils
+pip3 install numpy
+pip3 install pybind11
