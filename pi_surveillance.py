@@ -34,12 +34,18 @@ for line in f:
 	if line[0:6]=='Serial':
 		cpuserial = line[10:26]
 f.close()
+print("PI Serial Id is {}".format(cpuserial))
 r = requests.get(url + '/identity/externalIds/c8y_Serial/' + cpuserial, auth=auth, headers={'Accept':'application/json'})
 if r.status_code == 200:
 	device_id = r.json()['managedObject']['id']
 else:
-	device_id = requests.post(url + '/inventory/managedObjects', auth=auth, headers={'Content-Type': 'application/json', 'Accept': 'application/json'}, json={'name': 'PI ' + cpuserial})
-	requests.post(url + '/identity/globalIds/' + device_id + '/externalIds', auth=auth, json={'type': 'c8y_Serial', 'externalId': cpuserial})
+	dr = requests.post(url + '/inventory/managedObjects', auth=auth, headers={'Content-Type': 'application/json', 'Accept': 'application/json'}, json={"name": "PI " + cpuserial, "type": "Raspberry PI", "c8y_IsDevice": {}})
+	if dr.status_code == 201:
+		device_id = dr.json()['id']
+		requests.post(url + '/identity/globalIds/' + device_id + '/externalIds', auth=auth, json={'type': 'c8y_Serial', 'externalId': cpuserial})
+	else:
+		print("Couldn't create device: {}".format(dr.status_code))
+		quit()
 print("Device Id is {}".format(device_id))
 # load our serialized model from disk
 print("[INFO] loading model...")
@@ -154,7 +160,12 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
 				print("{} persons detected".format(persons))
 				# write the image to temporary file
 				event_data = {'source': {'id': device_id}, "persons":persons, "text": "Room is occupied", "type": "room_occupied", "time": datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()}
-				event = requests.post(url + '/event/events',  auth=auth, headers={"Content-Type": "application/json", "Accept": "application/json"}, json=event_data ).json()
+				re = requests.post(url + '/event/events',  auth=auth, headers={"Content-Type": "application/json", "Accept": "application/json"}, json=event_data )
+				if re.status_code == 201:
+					event = re.json()
+				else:
+					print("Something went wrong while creating the event: {}".format(re.json()))
+					quit()
 				requests.post(url + '/event/events/' + event['id'] + '/binaries', auth=auth, headers={"Accept": "application/json"}, files={'file': ('snapshot.jpg', cv2.imencode('.jpg', frame)[1].tobytes(), 'image/jpg')})
 				# update the last uploaded timestamp and reset the motion
 				# counter
