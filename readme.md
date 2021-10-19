@@ -1,4 +1,4 @@
-#Movement detection and persons counter for Raspberry PI
+# Movement detection and persons counter for Raspberry PI
 
 This Python program works with Python 3.
 It includes pretrained model.
@@ -19,3 +19,20 @@ Content should look like that:
 	"c8y_password": "<yourpassword>"
 }
 ```
+You will need to install the following packages (sudo apt-get install):
+- python3
+- libopencv-dev
+- python3-opencv
+- pyhton3-scipy
+- libhdf5-dev
+- libhdf5-serial-dev
+- libcblas-dev
+- libatlas-base-dev
+- libjasper-dev
+- libqtgui4
+- libqt4-test
+
+Then install these Python libraries (pip3 install):
+- imutils
+- numpy
+- pybind11
